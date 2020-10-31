@@ -7,12 +7,8 @@ import java.util.Scanner;
 public class EmployeePayrollService {
 	private List<EmployeePayrollData> employeePayrollList;
 
-	public EmployeePayrollService() {
-		this.employeePayrollList = employeePayrollList;
-	}
-
 	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
-
+		this.employeePayrollList = employeePayrollList;
 	}
 
 	public static void main(String[] args) {
@@ -22,7 +18,6 @@ public class EmployeePayrollService {
 		employeePayrollService.readEmployeePayrollData(scan);
 		employeePayrollService.writeEmployeePayrollData();
 	}
-
 
 	private void readEmployeePayrollData(Scanner consoleInputReader) {
 		System.out.println("Enter Employee ID: ");
