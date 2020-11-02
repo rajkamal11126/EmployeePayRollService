@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WatchService {
-	static Kind<?>[] CREATE = null;
-	static Modifier DELETE = null;
-	static Modifier MODIFY = null;
-	WatchService watcher;
+	static Kind<?>[] ENTRY_CREATE = null;
+	static Modifier ENTRY_DELETE = null;
+	static Modifier ENTRY_MODIFY = null;
+	WatchService watcher,register;
 	Map<WatchKey, Path> dirWatchers;
 
 	public WatchService(Path dir) throws IOException {
@@ -29,7 +29,7 @@ public class WatchService {
 	}
 
 	private void registerDirWatchers(Path dir) throws IOException {
-		WatchKey key = dir.register(watcher, CREATE, DELETE, MODIFY);
+		WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
 		dirWatchers.put(key, dir);
 	}
 
@@ -56,19 +56,18 @@ public class WatchService {
 			if (dir == null)
 				continue;
 			for (WatchEvent<?> event : key.pollEvents()) {
-				Kind<?> kind = event.kind();
-				@SuppressWarnings("unchecked")
+				WatchEvent.Kind kind = event.kind();
 				Path name = ((WatchEvent<Path>) event).context();
 				Path child = dir.resolve(name);
 				System.out.format("%s: %s\n", event.kind().name(), child);
 
-				if (kind ==CREATE) {
+				if (kind == ENTRY_CREATE) {
 					try {
 						if (Files.isDirectory(child))
 							scanAndRegisterDirectories(child);
 					} catch (IOException x) {
 					}
-				} else if (kind.equals(DELETE)) {
+				} else if (kind.equals(ENTRY_DELETE)) {
 					if (Files.isDirectory(child))
 						dirWatchers.remove(key);
 				}
